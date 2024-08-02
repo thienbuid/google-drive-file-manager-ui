@@ -19,7 +19,6 @@ function useFetchData<T>(
     const fetchData = async () => {
       try {
         const result = await callback();
-        console.log(result);
         if (!result) return;
         const { data, status, message } = result;
         setData(data);
