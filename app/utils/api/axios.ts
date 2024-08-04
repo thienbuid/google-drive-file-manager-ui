@@ -20,7 +20,7 @@ export interface ResponseType<T> {
   data: T;
 }
 
-export class Request {
+class Request {
   static instance: Request;
   private readonly axios: AxiosInstance;
   constructor() {
@@ -64,3 +64,5 @@ export class Request {
     return this.instance;
   }
 }
+
+export const request = Request.getInstance();
