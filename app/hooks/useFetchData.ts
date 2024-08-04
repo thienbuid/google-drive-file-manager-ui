@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ResponseType } from "../utils/api/axios";
 
-const STATUS_DEFAULT = "OK";
+const STATUS_DEFAULT = "FAILED";
 const MESSAGE_DEFAULT = "No message";
 
 function useFetchData<T>(
@@ -18,6 +18,7 @@ function useFetchData<T>(
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(false);
         const result = await callback();
         if (!result) return;
         const { data, status, message } = result;
@@ -27,7 +28,7 @@ function useFetchData<T>(
       } catch (error) {
         setErrors(error as any);
       } finally {
-        setLoading(true);
+        setLoading(false);
       }
     };
     fetchData();
