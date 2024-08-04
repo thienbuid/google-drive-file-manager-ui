@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Files = ({ files }: Props) => {
-  return (
+  return files.length ? (
     <div className="flex flex-col gap-5">
       <h4 className="font-medium">Files</h4>
       <div className="grid grid-cols-4 gap-4 ">
@@ -16,6 +16,8 @@ const Files = ({ files }: Props) => {
         })}
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

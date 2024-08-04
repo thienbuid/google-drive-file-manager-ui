@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Folders = ({ folders, onClickFolder }: Props) => {
-  return (
+  return folders.length ? (
     <div className="flex flex-col gap-5">
       <h4 className="font-medium">Folders</h4>
       <div className="grid grid-cols-4 gap-4">
@@ -23,6 +23,8 @@ const Folders = ({ folders, onClickFolder }: Props) => {
         })}
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

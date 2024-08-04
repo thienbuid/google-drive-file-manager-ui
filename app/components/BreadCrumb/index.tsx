@@ -1,5 +1,5 @@
+import { File } from "@/app/interfaces/file.interface";
 import React from "react";
-import { File } from "../interfaces/file.interface";
 
 type Props = {
   breadcrumbs: File[];
@@ -14,13 +14,11 @@ const BreadCrumb = ({ breadcrumbs, handleBackFolder }: Props) => {
         return (
           <li
             key={bread.id}
-            className={`inline-flex items-center hover:cursor-pointer ${
-              isLastElement ? "font-semibold" : ""
-            }`}
+            className="inline-flex items-center hover:cursor-pointer"
             onClick={() => handleBackFolder(index)}
           >
             <a
-              className={`flex items-center ${
+              className={`flex items-center text-xl select-none ${
                 isLastElement ? "text-gray-800" : "text-gray-500"
               } hover:text-blue-600 focus:outline-none`}
             >
