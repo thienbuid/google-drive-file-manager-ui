@@ -7,5 +7,6 @@ export interface File {
   name: string;
   trashed: boolean;
   modifiedTime: string;
+  parents?: string[]
   type: FileType;
 }
