@@ -12,9 +12,9 @@ import ProgressBar from "./ProgressBar";
 import { InfoCloud } from "../interfaces/info-cloud.interface";
 import { convertSize } from "../utils/functions/convert-size-file";
 import FolderTree from "./FolderTree";
-import { request } from "../utils/api/axios";
 import { FolderTree as FolderTreeType } from "../interfaces/folder-tree";
 import BreadCrumb from "./BreadCrumb";
+import fileManagerService from "../services/file-manager.service";
 
 const root: File = {
   mimeType: "application/vnd.google-apps.folder",
@@ -29,42 +29,30 @@ const root: File = {
 
 const GoogleDriveManager = () => {
   const [breadcrumbs, setBreadcrumbs] = useState<File[]>([root]);
-  const callApiFiles = useCallback(async () => {
-    return await request.get(
-      `http://localhost:3900/v1/api/file-manager/folder/${
-        breadcrumbs[breadcrumbs.length - 1].id
-      }/files`
-    );
-  }, [breadcrumbs]);
 
-  const callApiTreeFolder = useCallback(async () => {
-    return await request.get(
-      `http://localhost:3900/v1/api/file-manager/tree-folder`
-    );
-  }, []);
-
-  const callApiAbout = useCallback(async () => {
-    return await request.get("http://localhost:3900/v1/api/file-manager/about");
-  }, []);
-
-  const [cloudInfo, statusGetCloudInfo] = useFetchData<InfoCloud>(
-    callApiAbout,
+  const [cloudInfo, cloudInfoStatus, setCloudInfo] = useFetchData<InfoCloud>(
+    fileManagerService.getAbout,
     {} as InfoCloud
   );
 
-  const [files, getFilesStatus, getFilesMessage, getFilesLoading] =
-    useFetchData<File[]>(callApiFiles, []);
+  const [files, filesStatus, setFiles] = useFetchData<File[]>(
+    useCallback(
+      async () =>
+        fileManagerService.getFilesFromFolder(
+          breadcrumbs[breadcrumbs.length - 1].id
+        ),
+      [breadcrumbs]
+    ),
+    [],
+  );
 
-  const [
-    folderTree,
-    getFolderTreeStatus,
-    getFolderTreeMessage,
-    getFolderTreeLoading,
-  ] = useFetchData<FolderTreeType>(callApiTreeFolder, {} as any);
+  const [folderTree, folderTreeStatus, setFolderTree] =
+    useFetchData<FolderTreeType>(fileManagerService.getFolderTree, {} as any);
 
   const handleFolderClick = (file: File) => {
-    const isExist = breadcrumbs.some((bread) => bread.id === file.id);
-    !isExist && setBreadcrumbs((prev) => [...prev, file]);
+    const isExist = breadcrumbs.findIndex((bread) => bread.id === file.id);
+    if (isExist !== -1) handleBackFolder(isExist);
+    else setBreadcrumbs((prev) => [...prev, file]);
   };
 
   const handleBackFolder = (selectIndex: number) => {
@@ -75,7 +63,7 @@ const GoogleDriveManager = () => {
   };
 
   return (
-    <div className="container flex gap-3 justify-between h-[1000px] mx-auto bg-[#e5e8eb] rounded-xl overflow-hidden">
+    <div className="container flex gap-3 justify-between h-[1000px] mx-auto bg-[#e5e8eb] rounded-xl overflow-hidden select-none">
       <div className="flex flex-col gap-5 w-2/12 p-8">
         <Button
           onClick={() => {
@@ -94,12 +82,16 @@ const GoogleDriveManager = () => {
         >
           New
         </Button>
-        {getFolderTreeStatus === "OK" && (
+        {folderTreeStatus.status === "OK" && (
           <div className="overflow-auto">
-            <FolderTree className="list-none" data={folderTree} />
+            <FolderTree
+              handleFolderClick={handleFolderClick}
+              className="list-none"
+              data={folderTree}
+            />
           </div>
         )}
-        {statusGetCloudInfo === "OK" && (
+        {cloudInfoStatus.status === "OK" && (
           <div className="flex flex-col gap-2">
             <ProgressBar
               percent={
@@ -113,13 +105,13 @@ const GoogleDriveManager = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-5 p-8 flex-1 bg-white">
+      <div className="flex flex-col gap-5 p-8 flex-1 bg-white overflow-hidden">
         <BreadCrumb
           breadcrumbs={breadcrumbs}
           handleBackFolder={handleBackFolder}
         />
         <div className="flex flex-col h-full gap-5 overflow-auto">
-          {getFilesLoading ? (
+          {filesStatus.loading ? (
             <Loading />
           ) : files.length ? (
             <>
