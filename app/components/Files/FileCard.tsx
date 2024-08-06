@@ -15,14 +15,16 @@ const FileCard = ({ file }: Props) => {
           <img src={file.iconLink} alt="" />
         </div>
         <p className="flex flex-1 truncate select-none">{file.name}</p>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="size-5"
-        >
-          <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
-        </svg>
+        <div className="flex rounded-full p-1 items-center justify-center hover:bg-zinc-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="size-5"
+          >
+            <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+          </svg>
+        </div>
       </div>
       {file.type && (
         <div className="overflow-hidden rounded-lg">
