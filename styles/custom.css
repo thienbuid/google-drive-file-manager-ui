@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.grid-container {
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
