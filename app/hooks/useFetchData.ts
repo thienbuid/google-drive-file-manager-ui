@@ -32,7 +32,7 @@ function useFetchData<T>(
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(false);
+        setLoading(true);
         const result = await callback();
         if (!result) return;
         const { data, status, message } = result;
